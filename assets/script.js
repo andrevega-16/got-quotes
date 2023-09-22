@@ -5,7 +5,7 @@ const GOTQuotes = {
     modeContainer: document.querySelector('#mode'),
     mode: localStorage.getItem('mode'),
     loading: false,
-    
+
     async getRandomQuote() {
         const response = await fetch(this.api);
         const quote = await response.json();
@@ -29,9 +29,8 @@ const GOTQuotes = {
             if (this.loading) return;
             this.loading = true;
             await this.cleanUp();
-            
             await this.showQuote(await this.getRandomQuote());
-            
+
             this.loading = false;
         });
     },
@@ -46,7 +45,15 @@ const GOTQuotes = {
             this.setModeIcon(img);
             this.setModeClass();
             localStorage.setItem('mode', this.mode);
+
+            this.animateIcon('rot', img);
         });
+    },
+
+    animateIcon(animation, icon, tm = 350) {
+        icon.style.animation = `${animation} ${tm}ms`;
+        const cleanStyle = () => icon.removeAttribute('style');
+        setTimeout(cleanStyle, tm);
     },
 
     createImg() {
@@ -69,20 +76,20 @@ const GOTQuotes = {
         return new Promise(resolve => {
             const chars = this.quoteContainer.querySelectorAll('span');
             let index = 0;
-    
+
             const intervalID = setInterval(() => {
                 chars[index++].classList.add('fade-out');
-    
+
                 if (index === chars.length) {
                     clearInterval(intervalID);
                     this.quoteWrapper.querySelector('.author').classList.add('fade-out');
-    
+
                     setTimeout(() => {
                         // ...
                         document.querySelector('.author')?.remove();
                         this.quoteWrapper.removeAttribute('style');
                         this.quoteContainer.innerHTML = '';
-    
+
                         resolve();
                     }, 500);
                 }
@@ -96,13 +103,13 @@ const GOTQuotes = {
             const { sentence } = quote;
             const len = sentence.length;
             const tm = 2000 / len * Math.sqrt(len) / 7;
-    
+
             this.adjustContainer(sentence);
-    
+
             const intervalId = setInterval(() => {
                 const prev = sentence[index - 1];
                 const char = sentence[index++];
-    
+
                 if (!char) {
                     this.showAuthor(quote.character);
                     if (typeof callback === 'function') {
@@ -111,7 +118,7 @@ const GOTQuotes = {
                     resolve();
                     return clearInterval(intervalId);
                 }
-    
+
                 // Avoid breaking words while typing... work on this later
                 if (prev === ' ') {
                     const container = this.quoteContainer;
@@ -125,14 +132,14 @@ const GOTQuotes = {
                     span.innerText = word;
                     container.appendChild(span);
                     const { height: newHeight } = container.getBoundingClientRect();
-    
+
                     if (height !== newHeight) {
                         container.appendChild(document.createElement('br'));
                     }
-    
+
                     span.remove();
                 }
-    
+
                 // Add char
                 this.addChar(char);
             }, tm);
