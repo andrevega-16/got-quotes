@@ -24,15 +24,20 @@ const GOTQuotes = {
     async loadQuote() {
         await this.showQuote(await this.getRandomQuote());
         this.loading = false;
+        setTimeout(this.cleanAndLoad.bind(this), 7000);
+    },
+
+    async cleanAndLoad() {
+        await this.cleanUp();
+        await this.loadQuote();
     },
 
     handleQuoteRefresh() {
-        this.quoteContainer.addEventListener('click', async () => {
+        this.quoteContainer.addEventListener('click', () => {
             // Do nothing if loading another quote
             if (this.loading) return;
             this.loading = true;
-            await this.cleanUp();
-            this.loadQuote();
+            cleanAndLoad();
         });
     },
 
