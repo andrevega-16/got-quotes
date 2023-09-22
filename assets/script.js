@@ -58,7 +58,7 @@ const GOTQuotes = {
 
     setModeIcon(img) {
         const icon = this.mode === 'dark' ? 'light' : 'dark'
-        img.src = `/assets/img/moon-${icon}.png`;
+        img.src = `./assets/img/moon-${icon}.png`;
     },
 
     setModeClass() {
