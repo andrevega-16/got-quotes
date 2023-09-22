@@ -14,13 +14,16 @@ const GOTQuotes = {
 
     async init() {
         this.loading = true;
-        setTimeout(async () => {
-            await this.showQuote(await this.getRandomQuote());
-            this.loading = false;
-        }, 500);
+        
+        setTimeout(this.loadQuote.bind(this), 500);
 
         this.setMode();
         this.handleQuoteRefresh();
+    },
+
+    async loadQuote() {
+        await this.showQuote(await this.getRandomQuote());
+        this.loading = false;
     },
 
     handleQuoteRefresh() {
@@ -29,9 +32,7 @@ const GOTQuotes = {
             if (this.loading) return;
             this.loading = true;
             await this.cleanUp();
-            await this.showQuote(await this.getRandomQuote());
-
-            this.loading = false;
+            this.loadQuote();
         });
     },
 
