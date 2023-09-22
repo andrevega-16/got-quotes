@@ -3,7 +3,11 @@ const GOTQuotes = {
     quoteWrapper: document.querySelector('#quote-wrapper'),
     quoteContainer: document.querySelector('#quote'),
     modeContainer: document.querySelector('#mode'),
+    volumeContainer: document.querySelector('#volume-container'),
     mode: localStorage.getItem('mode'),
+    volume: document.querySelector('#volume'),
+    audio: document.querySelector('audio'),
+    fullScreen: document.querySelector('#full-screen'),
     loading: false,
 
     async getRandomQuote() {
@@ -14,11 +18,60 @@ const GOTQuotes = {
 
     async init() {
         this.loading = true;
-        
+
         setTimeout(this.loadQuote.bind(this), 500);
 
         this.setMode();
         this.handleQuoteRefresh();
+        this.volumeHandler();
+        this.fullscreenHandler();
+        this.handleToggleElems();
+        console.log(!window.screenTop && !window.screenY)
+    },
+
+    handleToggleElems() {
+        let timeout;
+
+        window.addEventListener('mousemove', throttle(() => {
+            clearTimeout(timeout);
+            document.body.classList.add('active');
+            console.log(1);
+            timeout = setTimeout(() => {
+                document.body.classList.remove('active');
+            }, 3000);
+        }, 1000));
+    },
+
+    fullscreenHandler() {
+        let fullScreen = false;
+        this.fullScreen.addEventListener('click', () => {
+            if (fullScreen) {
+                document.exitFullscreen();
+            } else {
+                document.body.requestFullscreen();
+            }
+            fullScreen = !fullScreen;
+        });
+    },
+
+    volumeHandler() {
+        document.querySelector('#volume-inactive').addEventListener('click', () => {
+            this.volumeContainer.className = 'volume-active';
+            this.audio.play();
+        });
+
+        document.querySelector('#volume-active').addEventListener('click', () => {
+            this.volumeContainer.className = 'volume-inactive';
+            this.audio.pause();
+        });
+
+        this.volume.addEventListener('input', () => {
+            const volumeValue = this.volume.value;
+            this.audio.volume = volumeValue / 100;
+        })
+    },
+
+    setVolumen() {
     },
 
     async loadQuote() {
@@ -83,12 +136,13 @@ const GOTQuotes = {
             const chars = this.quoteContainer.querySelectorAll('span');
             let index = 0;
 
+            this.quoteWrapper.querySelector('.author').classList.add('fade-out');
+
             const intervalID = setInterval(() => {
                 chars[index++].classList.add('fade-out');
 
                 if (index === chars.length) {
                     clearInterval(intervalID);
-                    this.quoteWrapper.querySelector('.author').classList.add('fade-out');
 
                     setTimeout(() => {
                         // ...
@@ -184,6 +238,31 @@ const GOTQuotes = {
         container.appendChild(authorDiv);
     }
 };
+
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+const throttle = (callback, delay) => {
+    let timeout
+    return (...args) => {
+        if (timeout !== undefined) {
+            return
+        }
+
+        timeout = setTimeout(() => {
+            timeout = undefined
+        }, delay)
+
+        return callback(...args)
+    }
+}
 
 GOTQuotes.init();
 

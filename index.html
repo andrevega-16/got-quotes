@@ -16,10 +16,23 @@
 </head>
 
 <body>
+    <div id="volume-container" class="volume-inactive">
+        <span id="volume-inactive">🔈</span>
+        <span id="volume-active">🔊</span>
+
+        <input type="range" id="volume" min="0" max="100">
+        <audio>
+            <source src="./assets/audio/got-light-of-the-seven.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
     <div id="mode"></div>
+
     <div id="quote-wrapper">
         <div id="quote"></div>
     </div>
+
+    <div id="full-screen">⛶</div>
 </body>
 
 </html>

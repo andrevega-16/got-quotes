@@ -49,6 +49,58 @@ body.dark {
     cursor: pointer;
 }
 
+#volume-container {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    opacity: .5;
+}
+
+#volume-container:hover {
+    opacity: 1;
+}
+
+#volume-container #volume {
+    accent-color: gray;
+    opacity: 0;
+    transition: .3s;
+}
+
+#volume-container #volume:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.volume-inactive #volume,
+.volume-active #volume-inactive,
+.volume-inactive #volume-active {
+    display: none;
+}
+
+#full-screen {
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+    font-size: 21px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+#full-screen:hover {
+    transform: scale(1.15);
+}
+
+body > *:not(#quote-wrapper) {
+    opacity: 0;
+    transition: 1s;
+}
+
+body.active > *:not(#quote-wrapper) {
+    opacity: 1;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
