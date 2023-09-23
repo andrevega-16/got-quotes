@@ -71,19 +71,28 @@ const GOTQuotes = {
         })
     },
 
-    setVolumen() {
-    },
-
-    async loadQuote() {
-        await this.showQuote(await this.getRandomQuote());
+    async loadQuote(quote) {
+        quote = quote || await this.getRandomQuote();
+        await this.showQuote(quote);
         this.loading = false;
+        
+        // Refresh quote each 7 seconds
         setTimeout(this.cleanAndLoad.bind(this), 7000);
     },
 
+    //quote is a promise
     async cleanAndLoad() {
+        const quote = this.getRandomQuote();
         await this.cleanUp();
-        await this.loadQuote();
+        this.loadQuote(await quote);
     },
+
+    /*async cleanAndLoad() {
+        const quotePromise = this.getRandomQuote();
+        const cleanUpPromise = this.cleanUp();
+        const [quote] = await Promise.all([quotePromise, cleanUpPromise]);
+        this.loadQuote(quote);
+    },*/
 
     handleQuoteRefresh() {
         this.quoteContainer.addEventListener('click', () => {
